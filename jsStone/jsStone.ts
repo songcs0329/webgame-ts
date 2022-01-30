@@ -103,7 +103,7 @@ function createDeck({ mine, count }: { mine: boolean, count: number }) {
 function createHero({ mine }: { mine: boolean }) {
 	const player = mine ? me : opponent
 	player.heroData = new Hero(mine)
-	connectCardDOM(player.heroData, player.hero, true)
+	connectCardDOM({ data: player.heroData, DOM: player.hero, hero: true })
 }
 
 function  redrawScreen({ mine }: { mine: boolean }) {
@@ -115,23 +115,29 @@ function  redrawScreen({ mine }: { mine: boolean }) {
 function redrawField(target: Player) {
 	target.field.innerHTML = ""
 	target.fieldData.forEach(function(data) {
-		connectCardDOM(data, target.field)
+		connectCardDOM({ data, DOM: target.field })
 	})
 }
 function redrawDeck(target: Player) {
 	target.deck.innerHTML = ""
 	target.deckData.forEach(function(data) {
-		connectCardDOM(data, target.deck)
+		connectCardDOM({ data, DOM: target.deck })
 	})
 }
 function redrawHero(target: Player) {
 	console.log(target)
 	if(!target.heroData) throw new Error("heroData가 없습니다.")
 	target.hero.innerHTML = ""
-	connectCardDOM(target.heroData, target.hero, true)
+	connectCardDOM({ data: target.heroData, DOM: target.hero, hero: true })
 }
 
-function connectCardDOM(data: Card, DOM: HTMLDivElement, hero?: boolean) {
+interface CardDOM {
+	data: Card,
+	DOM: HTMLDivElement,
+	hero? : boolean
+}
+
+function connectCardDOM({ data, DOM, hero = false }: CardDOM) {
 	const cardEl = document.querySelector(".card-hidden .card")!.cloneNode(true) as HTMLDivElement
 	cardEl.querySelector('.card-att')!.textContent = String(data.att)
 	cardEl.querySelector('.card-hp')!.textContent = String(data.hp)
@@ -185,7 +191,7 @@ function turnAction({ cardEl, data }: { cardEl: HTMLDivElement , data: Card }) {
 				const index = enemy.fieldData.indexOf(data)
 				enemy.fieldData.splice(index, 1)
 			} else { // 영웅이 죽었을 떄
-				alert("승리!")
+				alert(`${turn ? "내" : "적"} 승리!`)
 				initiate()
 			}
 		}

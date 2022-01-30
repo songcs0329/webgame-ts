@@ -74,7 +74,7 @@ function createHero(_a) {
     var mine = _a.mine;
     var player = mine ? me : opponent;
     player.heroData = new Hero(mine);
-    connectCardDOM(player.heroData, player.hero, true);
+    connectCardDOM({ data: player.heroData, DOM: player.hero, hero: true });
 }
 function redrawScreen(_a) {
     var mine = _a.mine;
@@ -86,13 +86,13 @@ function redrawScreen(_a) {
 function redrawField(target) {
     target.field.innerHTML = "";
     target.fieldData.forEach(function (data) {
-        connectCardDOM(data, target.field);
+        connectCardDOM({ data: data, DOM: target.field });
     });
 }
 function redrawDeck(target) {
     target.deck.innerHTML = "";
     target.deckData.forEach(function (data) {
-        connectCardDOM(data, target.deck);
+        connectCardDOM({ data: data, DOM: target.deck });
     });
 }
 function redrawHero(target) {
@@ -100,9 +100,10 @@ function redrawHero(target) {
     if (!target.heroData)
         throw new Error("heroData가 없습니다.");
     target.hero.innerHTML = "";
-    connectCardDOM(target.heroData, target.hero, true);
+    connectCardDOM({ data: target.heroData, DOM: target.hero, hero: true });
 }
-function connectCardDOM(data, DOM, hero) {
+function connectCardDOM(_a) {
+    var data = _a.data, DOM = _a.DOM, _b = _a.hero, hero = _b === void 0 ? false : _b;
     var cardEl = document.querySelector(".card-hidden .card").cloneNode(true);
     cardEl.querySelector('.card-att').textContent = String(data.att);
     cardEl.querySelector('.card-hp').textContent = String(data.hp);
@@ -157,7 +158,7 @@ function turnAction(_a) {
                 enemy.fieldData.splice(index, 1);
             }
             else { // 영웅이 죽었을 떄
-                alert("승리!");
+                alert("".concat(turn ? "내" : "적", " \uC2B9\uB9AC!"));
                 initiate();
             }
         }
