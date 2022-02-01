@@ -1,16 +1,6 @@
-interface Player {
-	hero: HTMLDivElement,
-	deck: HTMLDivElement,
-	field: HTMLDivElement,
-	cost: HTMLDivElement,
-	deckData: Sub[],
-	heroData?: Hero | null,
-	fieldData: Sub[],
-	chosenCard?: HTMLDivElement | null,
-	chosenCardData?: Card | null
-}
+import * as Types from "./types";
 
-const opponent: Player = {
+const opponent: Types.Player = {
 	hero: document.getElementById("rival-hero") as HTMLDivElement,
 	deck: document.getElementById("rival-deck") as HTMLDivElement,
 	field: document.getElementById("rival-cards") as HTMLDivElement,
@@ -22,7 +12,7 @@ const opponent: Player = {
 	chosenCardData: null,
 }
 
-const me: Player = {
+const me: Types.Player = {
 	hero: document.getElementById("my-hero") as HTMLDivElement,
 	deck: document.getElementById("my-deck") as HTMLDivElement,
 	field: document.getElementById("my-cards") as HTMLDivElement,
@@ -34,15 +24,7 @@ const me: Player = {
 	chosenCardData: null,
 }
 
-interface Card {
-	att: number,
-	hp: number,
-	mine: boolean,
-	cost?: number,
-	field?: boolean,
-}
-
-class Hero implements Card {
+class Hero implements Types.Card {
 	att: number;
 	hp: number;
 	mine: boolean;
@@ -54,7 +36,7 @@ class Hero implements Card {
 		this.field = true
 	}
 }
-class Sub implements Card {
+class Sub implements Types.Card {
 	att: number;
 	hp: number;
 	field: boolean = false;
@@ -69,7 +51,7 @@ class Sub implements Card {
 	}
 }
 
-function isSub(data: Card): data is Sub {
+function isSub(data: Types.Card): data is Sub {
 	return data.cost ? true : false
 }
 
@@ -77,6 +59,7 @@ const turnButton = document.getElementById("turn-btn") as HTMLButtonElement
 let turn = true // true: 내 턴, flase: 상대 턴
 
 function initiate() {
+	console.log("initial jsStone");
 	[opponent, me].forEach(function (item) {
 		item.deckData = [];
 		item.heroData = null;
@@ -112,32 +95,26 @@ function  redrawScreen({ mine }: { mine: boolean }) {
 	redrawDeck(player)
 	redrawHero(player)
 }
-function redrawField(target: Player) {
+function redrawField(target: Types.Player) {
 	target.field.innerHTML = ""
 	target.fieldData.forEach(function(data) {
 		connectCardDOM({ data, DOM: target.field })
 	})
 }
-function redrawDeck(target: Player) {
+function redrawDeck(target: Types.Player) {
 	target.deck.innerHTML = ""
 	target.deckData.forEach(function(data) {
 		connectCardDOM({ data, DOM: target.deck })
 	})
 }
-function redrawHero(target: Player) {
+function redrawHero(target: Types.Player) {
 	console.log(target)
 	if(!target.heroData) throw new Error("heroData가 없습니다.")
 	target.hero.innerHTML = ""
 	connectCardDOM({ data: target.heroData, DOM: target.hero, hero: true })
 }
 
-interface CardDOM {
-	data: Card,
-	DOM: HTMLDivElement,
-	hero? : boolean
-}
-
-function connectCardDOM({ data, DOM, hero = false }: CardDOM) {
+function connectCardDOM({ data, DOM, hero = false }: Types.CardDOM) {
 	const cardEl = document.querySelector(".card-hidden .card")!.cloneNode(true) as HTMLDivElement
 	cardEl.querySelector('.card-att')!.textContent = String(data.att)
 	cardEl.querySelector('.card-hp')!.textContent = String(data.hp)
@@ -177,7 +154,7 @@ function deckToField({ data }: { data: Sub }): boolean {
 	return false
 }
 
-function turnAction({ cardEl, data }: { cardEl: HTMLDivElement , data: Card }) {
+function turnAction({ cardEl, data }: { cardEl: HTMLDivElement , data: Types.Card }) {
 	const team = turn ? me: opponent // 현재 턴의 누구
 	const enemy = turn ? opponent : me // 현재 턴의 상대
 
