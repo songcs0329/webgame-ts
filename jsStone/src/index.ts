@@ -59,7 +59,6 @@ const turnButton = document.getElementById("turn-btn") as HTMLButtonElement
 let turn = true // true: 내 턴, flase: 상대 턴
 
 function initiate() {
-	console.log("initial jsStone");
 	[opponent, me].forEach(function (item) {
 		item.deckData = [];
 		item.heroData = null;
