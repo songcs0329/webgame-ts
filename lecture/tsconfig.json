@@ -12,6 +12,8 @@
 			"ES2021",
 			"DOM"
 		],
+		"experimentalDecorators": true,
+		"target": "ES6"
 	},
 	"exclude": ["*.js"]
 }

@@ -39,3 +39,46 @@ const b: Readonly<Part> = {
 	b: true,
 	c: 1,
 }
+
+// 데코레이터
+function makeGenders(target: typeof Person) {
+	console.log("makeGenders");
+	return class extends target {
+		gender = "male"
+	}
+}
+function readonly(target: any, key: any) {
+	console.log(target, key)
+}
+@makeGenders
+class Person {
+	title: string;
+	age: number;
+	constructor(_title: string, _age: number) {
+		this.title = _title
+		this.age = _age
+	}
+	setTitle(_title: string) {
+		this.title = _title
+	}
+	@readonly
+	sayTitle(): any {
+		return this.title
+	}
+}
+const song = new Person("song", 30)
+@makeGenders
+class Person2 {
+	title: string;
+	age: number;
+	constructor(_title: string, _age: number) {
+		this.title = _title
+		this.age = _age
+	}
+	setTitle(_title: string) {
+		this.title = _title
+	}
+	sayTitle(): any {
+		return this.title
+	}
+}
